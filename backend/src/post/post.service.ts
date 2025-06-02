@@ -3,54 +3,58 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { Post } from './entities/post.entity';
 
 @Injectable()
 export class PostService {
-  private posts: CreatePostDto[] = [];
-  private idCounter = 1;
+  constructor(
+    @InjectRepository(Post)
+    private postRepo: Repository<Post>,
+  ) {}
 
-  create(createPostDto: CreatePostDto) {
+  async create(createPostDto: CreatePostDto) {
     const newPost = {
       ...createPostDto,
-      id: this.idCounter++,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    this.posts.push(newPost);
-    return newPost;
+    return this.postRepo.save(newPost);
   }
 
-  findAll() {
-    return this.posts;
+  async findAll() {
+    return this.postRepo.find({ order: { createdAt: 'DESC' } });
   }
 
   findOne(id: number) {
-    const post = this.posts.find((p) => p.id === id);
-    if (!post) throw new NotFoundException('Post not found');
+    const post = this.postRepo.findOne({
+      where: { id: id },
+    });
     return post;
   }
 
-  update(id: number, updatePostDto: UpdatePostDto, userId: number) {
-    const post = this.findOne(id);
+  async update(id: number, userId: number, updatePostDto: UpdatePostDto) {
+    const post = await this.findOne(id);
+    if (!post) throw new NotFoundException('게시글이 존재하지 않습니다.');
     if (post.authorId !== userId) {
-      throw new ForbiddenException('You are not the author of this post');
+      throw new ForbiddenException('수정 권한이 없습니다.');
     }
-    Object.assign(post, updatePostDto, { updatedAt: new Date() });
-    return post;
+    post.title = updatePostDto.title;
+    post.content = updatePostDto.content;
+    post.updatedAt = new Date();
+    return this.postRepo.save(post);
   }
 
-  remove(id: number, userId: number) {
-    const postIndex = this.posts.findIndex((p) => p.id === id);
-    if (postIndex === -1) throw new NotFoundException('Post not found');
-
-    const post = this.posts[postIndex];
+  async remove(id: number, userId: number) {
+    const post = await this.findOne(id);
+    if (!post) throw new NotFoundException('게시글이 존재하지 않습니다.');
     if (post.authorId !== userId) {
-      throw new ForbiddenException('You are not the author of this post');
+      throw new ForbiddenException('삭제 권한이 없습니다.');
     }
 
-    this.posts.splice(postIndex, 1);
-    return { message: 'Post deleted' };
+    return this.postRepo.remove(post);
   }
 }

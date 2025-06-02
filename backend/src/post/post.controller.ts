@@ -12,18 +12,18 @@ import {
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('post')
-@UseGuards(AuthGuard('jwt')) // 🔐 모든 라우트 보호
+@UseGuards(JwtAuthGuard) // 모든 라우트 보호
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto, @Req() req: Request) {
-    const user = req.user as any;
-    return this.postService.create({ ...createPostDto, authorId: user.userId });
+  create(@Body() createPostDto: CreatePostDto, @User('id') id: number) {
+    return this.postService.create({ ...createPostDto, authorId: id });
   }
 
   @Get()
@@ -43,7 +43,7 @@ export class PostController {
     @Req() req: Request,
   ) {
     const user = req.user as any;
-    return this.postService.update(+id, updatePostDto, user.userId);
+    return this.postService.update(+id, user.userId, updatePostDto);
   }
 
   @Delete(':id')

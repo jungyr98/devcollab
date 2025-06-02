@@ -5,21 +5,23 @@ import {
   Body,
   UseGuards,
   Request,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('login')
-  async login(@Body() body: { username: string; password: string }) {
-    // 예시니까 간단하게 처리
-    if (body.username === 'test' && body.password === '1234') {
-      return this.authService.login({ username: body.username, id: 1 });
+  @Post('/login')
+  async login(@Body() loginUserDto: LoginUserDto) {
+    const token = this.authService.login(loginUserDto);
+    if (!token) {
+      throw new UnauthorizedException('Invalid credentials');
     }
-    return { message: 'Invalid credentials' };
+    return token;
   }
 
   @UseGuards(JwtAuthGuard)
