@@ -13,16 +13,23 @@
 import { ref } from 'vue'
 import { login } from '@/api/auth'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
+const userStore = useUserStore()
 const email = ref('')
 const password = ref('')
 const router = useRouter()
 
 const submit = async () => {
   const { data } = await login({ email: email.value, password: password.value })
-  localStorage.setItem('token', data.access_token)
-  alert('로그인 성공!')
-  console.log('data', data)
+
+  // 토큰 및 사용자 정보 설정
+  userStore.setUser(data.access_token, {
+    id: data.userInfo.id,
+    email: data.userInfo.email,
+    username: data.userInfo.username,
+  })
+
   router.push('/post')
 }
 </script>

@@ -17,9 +17,11 @@ export const getPost = async (id: number) => {
 }
 
 export const updatePostById = async (id: number, data: any) => {
-  await axios.patch(`/post/${id}`, data, {})
+  const res = axios.patch(`/post/${id}`, data, {})
+  return res
 }
 
 export const deletePostById = async (id: number) => {
-  await axios.delete(`/post/${id}`, {})
+  const res = axios.delete(`/post/${id}`, {})
+  return res
 }
