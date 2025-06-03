@@ -17,11 +17,11 @@ export class AuthController {
 
   @Post('/login')
   async login(@Body() loginUserDto: LoginUserDto) {
-    const token = this.authService.login(loginUserDto);
-    if (!token) {
+    const loginUserInfo = this.authService.login(loginUserDto);
+    if (!loginUserInfo) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    return token;
+    return loginUserInfo;
   }
 
   @UseGuards(JwtAuthGuard)

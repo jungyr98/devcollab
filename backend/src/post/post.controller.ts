@@ -40,15 +40,13 @@ export class PostController {
   update(
     @Param('id') id: string,
     @Body() updatePostDto: UpdatePostDto,
-    @Req() req: Request,
+    @User('id') userId: number,
   ) {
-    const user = req.user as any;
-    return this.postService.update(+id, user.userId, updatePostDto);
+    return this.postService.update(+id, userId, updatePostDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @Req() req: Request) {
-    const user = req.user as any;
-    return this.postService.remove(+id, user.userId);
+  remove(@Param('id') id: string, @User('id') userId: number) {
+    return this.postService.remove(+id, userId);
   }
 }

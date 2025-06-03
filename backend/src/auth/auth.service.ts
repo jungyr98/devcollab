@@ -26,8 +26,9 @@ export class AuthService {
     // 로그인 처리 및 토큰 발급
     const payload = { email: loginUserDto.email, sub: user.id };
     const token = this.jwtService.sign(payload);
-    console.log('token', token);
+
     return {
+      userInfo: { id: user.id, email: user.email, username: user.username },
       access_token: token,
     };
   }
