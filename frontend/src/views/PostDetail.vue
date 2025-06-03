@@ -73,7 +73,7 @@ const cancelEdit = () => {
 
 const submitEdit = async (commentId: number) => {
   if (confirm('수정하시겠습니까?')) {
-    await updateComment(commentId, editedCommentContent.value, userStore.token)
+    await updateComment(commentId, editedCommentContent.value)
     await loadData()
     cancelEdit()
   }
@@ -81,7 +81,7 @@ const submitEdit = async (commentId: number) => {
 
 const deleteCommentById = async (commentId: number) => {
   if (confirm('정말 삭제하시겠습니까?')) {
-    await deleteComment(commentId, userStore.token)
+    await deleteComment(commentId)
     await loadData()
   }
 }
