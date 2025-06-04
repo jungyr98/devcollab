@@ -1,13 +1,13 @@
 import axios from '@/lib/axios'
 
-export const fetchPosts = async () => {
-  const res = await axios.get('/post')
-  return res.data
+export const fetchPosts = async (data: { page: number; limit: number; keyword: string }) => {
+  const res = await axios.get(`/post?page=${data.page}&limit=${data.limit}&keyword=${data.keyword}`)
+  return res
 }
 
 export const createPost = async (data: { title: string; content: string }) => {
   const res = await axios.post('/post', data)
-  return res.data
+  return res
 }
 
 export const getPost = async (id: number) => {

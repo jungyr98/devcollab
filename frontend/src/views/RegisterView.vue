@@ -11,10 +11,12 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { register } from '@/api/auth'
+import { useRoute, useRouter } from 'vue-router'
 
 const username = ref('')
 const email = ref('')
 const password = ref('')
+const router = useRouter()
 
 const userStore = useUserStore()
 
