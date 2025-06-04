@@ -3,7 +3,7 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -25,8 +25,28 @@ export class PostService {
     return this.postRepo.save(newPost);
   }
 
-  async findAll() {
-    return this.postRepo.find({ order: { createdAt: 'DESC' } });
+  async findAllWithPagination(params: {
+    page: number;
+    limit: number;
+    keyword?: string;
+  }) {
+    const { page, limit, keyword } = params;
+
+    const [items, totalCount] = await this.postRepo.findAndCount({
+      where: keyword
+        ? [{ title: ILike(`%${keyword}%`) }, { content: ILike(`%${keyword}%`) }]
+        : undefined,
+      order: { createdAt: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return {
+      items,
+      totalCount,
+      currentPage: page,
+    };
+    //return this.postRepo.find({ order: { createdAt: 'DESC' } });
   }
 
   findOne(id: number) {

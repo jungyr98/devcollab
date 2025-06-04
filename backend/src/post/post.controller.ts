@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -27,8 +28,18 @@ export class PostController {
   }
 
   @Get()
-  findAll() {
-    return this.postService.findAll();
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('keyword') keyword = '',
+  ) {
+    const pageNum = Number(page);
+    const limitNum = Number(limit);
+    return this.postService.findAllWithPagination({
+      page: pageNum,
+      limit: limitNum,
+      keyword,
+    });
   }
 
   @Get(':id')

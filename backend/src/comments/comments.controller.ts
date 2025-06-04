@@ -14,30 +14,30 @@ import { AuthGuard } from '@nestjs/passport';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { User } from 'src/common/decorators/user.decorator';
 
-@Controller('posts/:postId/comments')
+@Controller()
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @UseGuards(AuthGuard('jwt'))
-  @Post()
+  @Post('posts/:postId/comments')
   create(
     @Param('postId') postId: number,
     @Body() createCommentDto: CreateCommentDto,
-    @Req() req,
+    @User('id') userId: number,
   ) {
-    const userId = req.user.id;
     return this.commentsService.create(postId, userId, createCommentDto);
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get()
+  @Get('posts/:postId/comments')
   findAll(@Param('postId') postId: number) {
     return this.commentsService.findAllByPost(+postId);
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Patch('/:commentId')
+  @Patch('comment/:commentId')
   update(
     @Param('commentId') commentId: number,
     @Req() req,
@@ -47,7 +47,7 @@ export class CommentsController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Delete('/:commentId')
+  @Delete('comment/:commentId')
   remove(@Param('commentId') commentId: number, @Req() req) {
     return this.commentsService.remove(commentId, req.user.id);
   }
