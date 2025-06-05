@@ -33,6 +33,7 @@ export class PostService {
     const { page, limit, keyword } = params;
 
     const [items, totalCount] = await this.postRepo.findAndCount({
+      relations: ['userInfo'],
       where: keyword
         ? [{ title: ILike(`%${keyword}%`) }, { content: ILike(`%${keyword}%`) }]
         : undefined,
@@ -64,6 +65,8 @@ export class PostService {
     }
     post.title = updatePostDto.title;
     post.content = updatePostDto.content;
+    post.gitHubLink = updatePostDto.gitHubLink;
+    post.serviceLink = updatePostDto.serviceLink;
     post.updatedAt = new Date();
     return this.postRepo.save(post);
   }

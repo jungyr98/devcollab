@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Comment } from 'src/comments/entities/comment.entity';
 import * as bcrypt from 'bcrypt';
+import { Post } from 'src/post/entities/post.entity';
 
 @Entity()
 export class User {
@@ -29,6 +30,9 @@ export class User {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
   }
+
+  @OneToMany(() => Post, (post) => post.authorId)
+  posts: Post[];
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments?: Comment[];

@@ -6,6 +6,8 @@ export class CreatePostDto {
   title: string;
 
   content: string;
+  gitHubLink: string;
+  serviceLink: string;
   authorId: number;
   createdAt: Date;
   updatedAt: Date;

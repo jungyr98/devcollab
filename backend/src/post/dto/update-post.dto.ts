@@ -6,4 +6,7 @@ export class UpdatePostDto {
   title: string;
   @IsString()
   content: string;
+
+  gitHubLink: string;
+  serviceLink: string;
 }
