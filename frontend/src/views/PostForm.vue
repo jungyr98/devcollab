@@ -31,6 +31,12 @@ const submit = async () => {
   }
 }
 
+const onList = () => {
+  if (confirm('입력한 정보는 저장되지 않습니다.')) {
+    router.push('/post')
+  }
+}
+
 const onFileChange = async (e: Event) => {
   const target = e.target as HTMLInputElement
   const file = target.files?.[0]
@@ -49,20 +55,31 @@ const onFileChange = async (e: Event) => {
 <template>
   <div>
     <BaseCard>
-      <h2>게시글 작성</h2>
+      <h2>나의 사이드 프로젝트 정보</h2>
       <input
         v-model="title"
         type="text"
-        placeholder="제목을 입력하세요"
-        class="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="프로젝트명"
+        class="w-full my-2 border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
       <textarea
         v-model="content"
-        placeholder="내용을 입력하세요"
-        class="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="프로젝트 설명"
+        class="w-full my-2 border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
       ></textarea>
+      <input
+        type="text"
+        placeholder="GitHub"
+        class="my-2 border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+      <input
+        type="text"
+        placeholder="서비스 URL"
+        class="my-2 border border-gray-300 rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
       <input type="file" @change="onFileChange" />
-      <BaseButton label="등록" type="submit" @click="submit" :loading="loading.isLoading" />
+      <BaseButton label="저장" type="submit" @click="submit" :loading="loading.isLoading" />
+      <BaseButton label="목록" type="submit" @click="onList" :loading="loading.isLoading" />
     </BaseCard>
   </div>
 </template>

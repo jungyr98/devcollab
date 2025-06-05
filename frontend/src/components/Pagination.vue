@@ -4,7 +4,7 @@
       v-for="n in totalPages"
       :key="n"
       @click="() => emit('update:modelValue', n)"
-      :class="['px-4 py-2 rounded', modelValue === n ? 'bg-blue-600 text-white' : 'bg-gray-100']"
+      :class="['px-4 py-2 rounded', modelValue === n ? 'bg-blue-600 text-white' : 'bg-gray-900']"
     >
       {{ n }}
     </button>

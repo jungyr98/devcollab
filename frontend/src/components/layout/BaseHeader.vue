@@ -21,8 +21,10 @@ const onLogout = () => {
       <div>
         <nav class="flex gap-7">
           <RouterLink to="/home" class="text-white"><House />홈</RouterLink>
-          <RouterLink to="/post" class="text-white"><ClipboardPenLine />게시판</RouterLink>
-          <RouterLink to="/profile" class="text-white"><UserRound />내 정보</RouterLink>
+          <RouterLink to="/post" class="text-white"><ClipboardPenLine />프로젝트</RouterLink>
+          <RouterLink to="/" class="text-white"><UserRound />트러블슈팅</RouterLink>
+          <RouterLink to="/" class="text-white"><UserRound />News</RouterLink>
+          <RouterLink to="/" class="text-white"><UserRound />내 정보</RouterLink>
         </nav>
       </div>
       <div>

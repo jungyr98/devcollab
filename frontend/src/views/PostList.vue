@@ -7,13 +7,18 @@ import { useRoute, useRouter } from 'vue-router'
 import { fetchPosts } from '@/api/post'
 import MenuDescription from '@/components/MenuDescription.vue'
 import BaseButton from '@/components/BaseButton.vue'
+import BaseTag from '@/components/BaseTag.vue'
+import { Github, Link } from 'lucide-vue-next'
 
 interface Post {
   id: number
   title: string
   content: string
   authorId: string
+  gitHubLink: string
+  serviceLink: string
   createdAt: Date
+  userInfo: any
 }
 
 const route = useRoute()
@@ -21,7 +26,7 @@ const router = useRouter()
 const toast = useToast()
 const posts = ref<Post[]>([])
 const total = ref(0)
-const limit = 3
+const limit = 10
 
 const page = ref(Number(route.query.page) || 1)
 const keyword = ref((route.query.keyword as string) || '')
@@ -74,19 +79,53 @@ onMounted(async () => {
       ><BaseButton label="새로운 프로젝트 등록하기" type="button" @click="goToInsert"
     /></MenuDescription>
     <!-- 검색창 -->
-    <SearchBar v-model="keyword" @submit="onList" />
-    <div class="grid gap-4">
-      <ul>
-        <li
-          v-for="post in posts"
-          :key="post.id"
-          class="p-2 border-b shadow cursor-pointer"
-          @click="$router.push(`/post/${post.id}`)"
-        >
-          <h2 class="text-xl font-semibold">{{ post.title }}</h2>
-          <p class="text-sm text-gray-600">작성자: {{ post.authorId }}</p>
-        </li>
-      </ul>
+    <div class="flex justify-end">
+      <SearchBar v-model="keyword" @submit="onList" />
+    </div>
+    <!-- 목록 -->
+    <div class="">
+      <table class="w-full text-white text-md text-center lh">
+        <thead>
+          <tr class="hidden">
+            <th>No.</th>
+            <th>카테고리</th>
+            <th>스킬 태그</th>
+            <th>프로젝트명</th>
+            <th>작성자</th>
+            <th>작성일자</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="post in posts" :key="post.id" class="cursor-pointer">
+            <td colspan="6" @click="router.push(`/post/${post.id}`)">
+              <div class="flex p-5 rounded-xl mb-3 shadow hover:shadow-md vue-background-mid">
+                <!-- Title / Tag-->
+                <div class="flex flex-4/5 flex-col items-baseline">
+                  <p class="text-lg">
+                    {{ post.title }}
+                  </p>
+                  <!-- Title -->
+                  <div class="py-1">
+                    <!-- Tag -->
+                    <BaseTag content="Java" />
+                    <BaseTag content="Spring Boot" />
+                    <BaseTag content="React" />
+                  </div>
+                </div>
+                <!-- GitHub / Link 포함 여부 -->
+                <div class="flex w-14 justify-between">
+                  <Github :class="[post.gitHubLink === null && 'text-gray-600']" />
+                  <Link :class="[post.serviceLink === null && 'text-gray-600']" />
+                </div>
+                <!-- Author Name -->
+                <div class="flex flex-1/10 flex-col items-end pr-3">
+                  <p class="text-lg">{{ post.userInfo.username }}</p>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <!-- 페이지네이션 -->
     <Pagination v-model="page" :total="total" :limit="limit" />

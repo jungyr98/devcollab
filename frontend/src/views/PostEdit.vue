@@ -1,6 +1,8 @@
 <template>
   <form @submit.prevent="submit">
     <input v-model="title" placeholder="제목" />
+    <input v-model="gitHubLink" placeholder="GitHub Link" />
+    <input v-model="serviceLink" placeholder="Service Link" />
     <textarea v-model="content" placeholder="내용"></textarea>
     <button type="submit">수정 완료</button>
   </form>
@@ -15,11 +17,15 @@ const route = useRoute()
 const router = useRouter()
 const title = ref('')
 const content = ref('')
+const gitHubLink = ref('')
+const serviceLink = ref('')
 
 onMounted(async () => {
   const post = await getPost(Number(route.params.id))
   title.value = post.title
   content.value = post.content
+  gitHubLink.value = post.gitHubLink
+  serviceLink.value = post.serviceLink
 })
 
 const submit = async () => {
@@ -28,9 +34,10 @@ const submit = async () => {
   const res = await updatePostById(Number(route.params.id), {
     title: title.value,
     content: content.value,
+    gitHubLink: gitHubLink.value,
+    serviceLink: serviceLink.value,
   })
 
-  console.log('res', res)
   alert('수정되었습니다.')
   router.push(`/post/${route.params.id}`)
 }
