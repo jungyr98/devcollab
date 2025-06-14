@@ -1,12 +1,10 @@
-i
-
 <template>
   <form @submit.prevent="onSubmit" class="flex gap-2">
     <input
       v-model="localKeyword"
       type="text"
       placeholder="검색어 입력"
-      class="border rounded p-2 h-10"
+      class="border rounded p-2 ml-2 h-10"
     />
     <BaseButton :label="'검색'" />
   </form>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watchEffect, watch } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
+import SearchSkillBar from '@/components/SearchSkillBar.vue'
 import Pagination from '@/components/Pagination.vue'
 import { useToast } from 'vue-toastification'
 import { useRoute, useRouter } from 'vue-router'
@@ -79,7 +80,8 @@ onMounted(async () => {
       ><BaseButton label="새로운 프로젝트 등록하기" type="button" @click="goToInsert"
     /></MenuDescription>
     <!-- 검색창 -->
-    <div class="flex justify-end">
+    <div class="flex justify-end h-12">
+      <SearchSkillBar />
       <SearchBar v-model="keyword" @submit="onList" />
     </div>
     <!-- 목록 -->

@@ -85,6 +85,7 @@ const submit = async () => {
     toast.success('로그인되었습니다.')
     router.push('/post')
   } catch (err: any) {
+    password.value = ''
     toast.error(err.response?.data?.message)
     console.error(err)
   } finally {
