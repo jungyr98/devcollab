@@ -6,6 +6,7 @@ import { PostModule } from './post/post.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentsModule } from './comments/comments.module';
 import { UploadModule } from './upload/upload.module';
+import { SkillModule } from './skill/skill.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UploadModule } from './upload/upload.module';
     PostModule,
     CommentsModule,
     UploadModule,
+    SkillModule,
   ],
 })
 export class AppModule {}

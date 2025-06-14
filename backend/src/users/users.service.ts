@@ -22,7 +22,7 @@ export class UsersService {
 
   async findOne(email: string): Promise<User | undefined> {
     const user = await this.userRepo.findOne({ where: { email: email } });
-    if (!user) throw new NotFoundException('아아디가 존재하지 않습니다.');
+    if (!user) throw new NotFoundException('아이디가 존재하지 않습니다.');
     return user;
   }
 }
