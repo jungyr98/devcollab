@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watchEffect, watch } from 'vue'
+import { onMounted, ref, watchEffect, watch, computed } from 'vue'
 import SearchBar from '@/components/SearchBar.vue'
 import SearchSkillBar from '@/components/SearchSkillBar.vue'
 import Pagination from '@/components/Pagination.vue'
@@ -19,8 +19,11 @@ interface Post {
   gitHubLink: string
   serviceLink: string
   createdAt: Date
+  skills: any
   userInfo: any
 }
+
+type Skill = { id: number; name: string }
 
 const route = useRoute()
 const router = useRouter()
@@ -28,6 +31,8 @@ const toast = useToast()
 const posts = ref<Post[]>([])
 const total = ref(0)
 const limit = 10
+const skillArray = ref<Skill[]>([])
+const skillArrayIds = computed(() => skillArray.value.map((skill) => skill.id))
 
 const page = ref(Number(route.query.page) || 1)
 const keyword = ref((route.query.keyword as string) || '')
@@ -42,6 +47,7 @@ const onList = async () => {
       page: page.value,
       limit,
       keyword: keyword.value,
+      tagGroup: skillArrayIds.value,
     })
     posts.value = res.data.items
     total.value = res.data.totalCount
@@ -62,6 +68,7 @@ watchEffect(() => {
       ...route.query,
       page: page.value,
       keyword: keyword.value,
+      tagGroup: skillArrayIds.value,
     },
   })
 })
@@ -81,7 +88,7 @@ onMounted(async () => {
     /></MenuDescription>
     <!-- 검색창 -->
     <div class="flex justify-end h-12">
-      <SearchSkillBar />
+      <SearchSkillBar v-model="skillArray" />
       <SearchBar v-model="keyword" @submit="onList" />
     </div>
     <!-- 목록 -->
@@ -109,9 +116,7 @@ onMounted(async () => {
                   <!-- Title -->
                   <div class="py-1">
                     <!-- Tag -->
-                    <BaseTag content="Java" />
-                    <BaseTag content="Spring Boot" />
-                    <BaseTag content="React" />
+                    <BaseTag v-for="skill in post.skills" :content="skill.name" />
                   </div>
                 </div>
                 <!-- GitHub / Link 포함 여부 -->

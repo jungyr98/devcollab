@@ -1,11 +1,25 @@
 import axios from '@/lib/axios'
+import qs from 'qs'
 
-export const fetchPosts = async (data: { page: number; limit: number; keyword: string }) => {
-  const res = await axios.get(`/post?page=${data.page}&limit=${data.limit}&keyword=${data.keyword}`)
+export const fetchPosts = async (data: {
+  page: number
+  limit: number
+  keyword: string
+  tagGroup: number[]
+}) => {
+  const res = axios.get('/post', {
+    params: {
+      page: data.page,
+      limit: data.limit,
+      keyword: data.keyword,
+      tagGroup: data.tagGroup, // [1,2,3]
+    },
+    paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+  })
   return res
 }
 
-export const createPost = async (data: { title: string; content: string }) => {
+export const createPost = async (data: any) => {
   const res = await axios.post('/post', data)
   return res
 }

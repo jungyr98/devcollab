@@ -42,14 +42,32 @@
 <script setup lang="ts">
 import { Search } from 'lucide-vue-next'
 import Multiselect from 'vue-multiselect'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { fetchSkills } from '@/api/skill'
 
 type Skill = { id: number; name: string }
 
-const selectedSkills = ref<Skill[]>([])
+const props = defineProps<{
+  modelValue: Skill[]
+}>()
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: Skill[]): void
+}>()
+
+const selectedSkills = ref<Skill[]>(props.modelValue)
 const skills = ref<Skill[]>([])
 let skillIdCounter = 1000 // 새 항목 ID용 (임시로 클라이언트에서 관리)
+
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    selectedSkills.value = newVal
+  },
+)
+
+watch(selectedSkills, (val) => {
+  emit('update:modelValue', val)
+})
 
 onMounted(async () => {
   const res = await fetchSkills() // NestJS 백엔드로부터 스킬 목록 가져오기
@@ -98,6 +116,10 @@ onMounted(async () => {
   font-size: 14px;
 }
 
+:deep(.multiselect__tags-wrap) {
+  margin-bottom: 5px;
+}
+
 :deep(.multiselect__content-wrapper) {
   position: absolute !important;
   z-index: 50;
@@ -109,8 +131,20 @@ onMounted(async () => {
   border: 1px solid #d1d5db;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   padding: 0.5rem 0.5rem;
-  transition: all 0.2s ease-in-out;
   color: black;
-  left: -3px;
+  left: -1px;
+}
+
+:deep(.multiselect__content) {
+  width: 100%;
+}
+
+:deep(.multiselect__element) {
+  border-radius: 4px;
+  padding: 0px 5px;
+}
+
+:deep(.multiselect__element:hover) {
+  background-color: var(--color-blue-100);
 }
 </style>
