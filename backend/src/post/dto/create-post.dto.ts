@@ -8,6 +8,7 @@ export class CreatePostDto {
   content: string;
   gitHubLink: string;
   serviceLink: string;
+  tagGroup: number[];
   authorId: number;
   createdAt: Date;
   updatedAt: Date;

@@ -9,4 +9,5 @@ export class UpdatePostDto {
 
   gitHubLink: string;
   serviceLink: string;
+  tagGroup: number[];
 }

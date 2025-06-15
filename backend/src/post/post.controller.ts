@@ -16,6 +16,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/common/decorators/user.decorator';
+import { ParseArrayQueryPipe } from 'src/common/pipes/parse-array-query.pipe';
 
 @Controller('post')
 @UseGuards(JwtAuthGuard) // 모든 라우트 보호
@@ -32,6 +33,7 @@ export class PostController {
     @Query('page') page = 1,
     @Query('limit') limit = 10,
     @Query('keyword') keyword = '',
+    @Query('tagGroup', new ParseArrayQueryPipe(true)) tagGroup: number[],
   ) {
     const pageNum = Number(page);
     const limitNum = Number(limit);
@@ -39,6 +41,7 @@ export class PostController {
       page: pageNum,
       limit: limitNum,
       keyword,
+      tagGroup,
     });
   }
 

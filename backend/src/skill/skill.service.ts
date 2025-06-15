@@ -1,18 +1,16 @@
-// skill.service.ts
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Skill } from './entities/skill.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SkillService {
-  private readonly skills = [
-    { id: 1, name: 'JavaScript' },
-    { id: 2, name: 'TypeScript' },
-    { id: 3, name: 'Vue.js' },
-    { id: 4, name: 'NestJS' },
-    { id: 5, name: 'Docker' },
-    { id: 6, name: 'Java' },
-  ];
+  constructor(
+    @InjectRepository(Skill)
+    private readonly skillRepository: Repository<Skill>,
+  ) {}
 
-  findAll() {
-    return this.skills;
+  async findAll(): Promise<Skill[]> {
+    return this.skillRepository.find({ order: { name: 'ASC' } });
   }
 }
