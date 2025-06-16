@@ -2,7 +2,7 @@
   <button
     :type="type"
     :disabled="disabled || loading"
-    class="inline-flex items-center justify-center w-fit min-w-fit mb-2 px-4 py-2 rounded font-medium transition text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400"
+    class="inline-flex items-center justify-center w-fit min-w-30 min-h-10 px-4 py-2 rounded font-medium transition text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400"
   >
     <svg v-if="loading" class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />

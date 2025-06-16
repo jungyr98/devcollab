@@ -14,12 +14,20 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseCard from '@/components/BaseCard.vue'
 import { useToast } from 'vue-toastification'
 import { useLoadingStore } from '@/stores/loading'
+import { Github, Link } from 'lucide-vue-next'
+import BaseTag from '@/components/BaseTag.vue'
+import BaseLabel from '@/components/BaseLabel.vue'
+
+type Skill = { id: number; name: string }
 
 interface Post {
   id: number
   title: string
   content: string
   authorId: string
+  gitHubLink: string
+  serviceLink: string
+  skills: Skill[]
   createdAt: Date
 }
 
@@ -120,6 +128,11 @@ const deleteCommentById = async (commentId: number) => {
   }
 }
 
+// 목록 이동
+const onList = () => {
+  router.push('/post')
+}
+
 onMounted(async () => {
   loadData()
 })
@@ -128,14 +141,37 @@ onMounted(async () => {
 <template>
   <div v-if="post">
     <BaseCard>
-      <h2>{{ post.title }}</h2>
-      <p>{{ post.content }}</p>
+      <h2 class="flex items-center text-2xl font-bold mb-4">
+        {{ post.title }}
+      </h2>
+      <BaseLabel title="프로젝트 설명" />
+      <div class="min-h-48 p-2 mb-4 leading-8 whitespace-pre">{{ post.content }}</div>
+      <BaseLabel title="관련 링크" />
+      <div class="flex justify-between min-h-10">
+        <p v-if="post.gitHubLink === null && post.serviceLink === null">-</p>
+        <div v-if="post.gitHubLink !== null" class="flex mt-2 mb-4 w-49/100">
+          <Github class="mr-2" /> {{ post.gitHubLink ?? '-' }}
+        </div>
+        <div v-if="post.serviceLink !== null" class="flex mt-2 mb-4 w-49/100">
+          <Link class="mr-2" /> {{ post.serviceLink ?? '-' }}
+        </div>
+      </div>
+      <BaseLabel title="스킬 태그" />
+      <div class="py-1">
+        <!-- Tag -->
+        <BaseTag v-for="skill in post.skills" :content="skill.name" />
+      </div>
       <p>작성자: {{ post.authorId }}</p>
 
-      <div v-if="userStore.user?.id === Number(post.authorId)">
-        <div>
+      <div
+        v-if="userStore.user?.id === Number(post.authorId)"
+        class="flex justify-between py-2 mt-5"
+      >
+        <div></div>
+        <div class="flex justify-between w-93">
           <BaseButton label="수정" @click="goToEdit" />
           <BaseButton label="삭제" @click="deletePost" />
+          <BaseButton label="목록" @click="onList" />
         </div>
       </div>
       <ul>
@@ -158,7 +194,12 @@ onMounted(async () => {
       </ul>
       <div class="mt-4">
         <textarea v-model="newComment" rows="3" class="w-full p-2 border rounded"></textarea>
-        <BaseButton label="댓글 작성" @click="handleCommentSubmit" />
+        <div class="flex justify-between py-2 mt-5">
+          <div></div>
+          <div class="flex justify-between">
+            <BaseButton label="댓글 작성" @click="handleCommentSubmit" />
+          </div>
+        </div>
       </div>
     </BaseCard>
   </div>

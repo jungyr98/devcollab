@@ -1,6 +1,6 @@
 <template>
-  <div class="relative w-full mb-2">
-    <Search class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-6 h-5" />
+  <div class="relative w-full">
+    <Search class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 w-6 h-5" />
     <multiselect
       v-model="selectedSkills"
       :options="skills"
@@ -15,7 +15,7 @@
       label="name"
       track-by="id"
       hide-selected="true"
-      class="pl-8 border rounded p-2 ml-2 h-10 relative"
+      class="pl-8 border rounded p-2 h-10 relative"
     >
       <!-- 🎨 선택된 태그 UI 커스터마이징 -->
       <template #tag="{ option, remove }">

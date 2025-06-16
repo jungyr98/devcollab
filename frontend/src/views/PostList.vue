@@ -87,7 +87,7 @@ onMounted(async () => {
       ><BaseButton label="새로운 프로젝트 등록하기" type="button" @click="goToInsert"
     /></MenuDescription>
     <!-- 검색창 -->
-    <div class="flex justify-end h-12">
+    <div class="flex justify-end items-center h-12">
       <SearchSkillBar v-model="skillArray" />
       <SearchBar v-model="keyword" @submit="onList" />
     </div>
