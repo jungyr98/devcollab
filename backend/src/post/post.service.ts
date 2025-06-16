@@ -9,7 +9,6 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './entities/post.entity';
 import { Skill } from 'src/skill/entities/skill.entity';
-import { DataSource } from 'typeorm';
 
 @Injectable()
 export class PostService {
@@ -18,7 +17,6 @@ export class PostService {
     private postRepo: Repository<Post>,
     @InjectRepository(Skill)
     private skillRepo: Repository<Skill>,
-    private readonly dataSource: DataSource,
   ) {}
 
   async create(createPostDto: CreatePostDto) {
@@ -70,7 +68,19 @@ export class PostService {
 
     // 스킬 ID 배열 필터링 (tagGroup이 있으면)
     if (tagGroup && tagGroup.length > 0) {
-      query.andWhere('skill.id IN (:...tagGroup)', { tagGroup });
+      //query.andWhere('skill.id IN (:...tagGroup)', { tagGroup });
+      query.andWhere((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select('post.id')
+          .from(Post, 'post')
+          .innerJoin('post.skills', 's')
+          .where('s.id IN (:...tagGroup)', { tagGroup })
+          .groupBy('post.id')
+          .having('COUNT(DISTINCT s.id) = :count', { count: tagGroup.length }) // 스킬 모두 해당해야함
+          .getQuery();
+        return `post.id IN ${subQuery}`;
+      });
     }
 
     // 키워드 검색 (title or content)
