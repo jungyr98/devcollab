@@ -23,7 +23,7 @@ const onLogout = () => {
           <RouterLink to="/home" class="text-white"><House />홈</RouterLink>
           <RouterLink to="/post" class="text-white"><ClipboardPenLine />프로젝트</RouterLink>
           <RouterLink to="/" class="text-white"><UserRound />트러블슈팅</RouterLink>
-          <RouterLink to="/" class="text-white"><UserRound />News</RouterLink>
+          <RouterLink to="/news" class="text-white"><UserRound />News</RouterLink>
           <RouterLink to="/" class="text-white"><UserRound />내 정보</RouterLink>
         </nav>
       </div>

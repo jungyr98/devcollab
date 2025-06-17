@@ -6,6 +6,7 @@ import PostForm from '@/views/PostForm.vue'
 import PostDetail from '@/views/PostDetail.vue'
 import PostEdit from '@/views/PostEdit.vue'
 import LoginView from '@/views/LoginView.vue'
+import NewsList from '@/views/NewsList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,7 +26,7 @@ const router = createRouter({
       component: MainLayout,
       children: [
         {
-          path: '/home',
+          path: 'home',
           component: HomeView,
         },
         {
@@ -43,6 +44,10 @@ const router = createRouter({
         {
           path: 'post/:id/edit',
           component: PostEdit,
+        },
+        {
+          path: 'news',
+          component: NewsList,
         },
       ],
     },
